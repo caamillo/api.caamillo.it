@@ -1,12 +1,48 @@
 import { Elysia } from "elysia"
-import { whois } from "./utils/whois";
+import jwt from 'jsonwebtoken'
+import { bearer } from '@elysiajs/bearer'
+
+import whois from "./utils/whois"
+
+const JWT_EXPIRE_IN = '1d'
+
+const auth = (token, set) => {
+  try {
+    if(!jwt.verify(token, Bun.env['SECRET_KEY'])) {
+      set.status = 401
+      return false
+    }
+    return true
+  } catch (err) {
+    return false
+  }
+}
 
 const app = new Elysia()
-  .group('/v1', app =>
-    app
-    .get("/whois/:url", async ({ query: { parsed }, params: { url } }) =>
-      await whois(url, parsed === 'true') ?? { error: 'Unexpected Error' }
-    )
+  .use(bearer())
+  .post('/token', async ({ body: { name, pw }, set }) => {
+    if (!name || typeof name !== 'string' || !pw || typeof pw !== 'string') {
+      set.status = 400
+      return 'Bad request'
+    }
+    if (pw !== Bun.env['SECRET_PW']) {
+      set.status = 401
+      return 'Unauthorized'
+    }
+    const accessToken = await jwt.sign({
+      name: name
+    }, Bun.env['SECRET_KEY'], { expiresIn: JWT_EXPIRE_IN }) // 1 day
+    return accessToken
+  })
+  .group('/v1', app => {
+    app.onBeforeHandle(({ bearer, set }) => {
+      if (!auth(bearer, set)) return 'Unauthorized'
+    })
+    return app
+      .get("/whois/:url", async ({ query: { parsed }, params: { url } }) =>
+        await whois(url, parsed === 'true') ?? { error: 'Unexpected Error' }
+      )
+  }
   )
   .listen(Bun.env['API_PORT']);
 

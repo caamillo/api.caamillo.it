@@ -1,7 +1,7 @@
 const { lookup } = require("whois-light")
 const parser = require('bun-whois-parser')
 
-const whois = async (url, parsed=false) => {
+module.exports = async (url, parsed=false) => {
     try {
         const res = await lookup(url)
         if (!parsed) return res
@@ -13,8 +13,4 @@ const whois = async (url, parsed=false) => {
             url: url
         }
     }
-}
-
-module.exports = {
-    whois
 }

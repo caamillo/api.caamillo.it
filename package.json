@@ -5,8 +5,10 @@
     "dev": "bun run --watch src/index.js"
   },
   "dependencies": {
+    "@elysiajs/bearer": "^0.7.0",
     "bun-whois-parser": "^1.0.3",
     "elysia": "latest",
+    "jsonwebtoken": "^9.0.2",
     "npm": "^10.2.3",
     "whois-light": "^1.1.7"
   },
