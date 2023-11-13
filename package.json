@@ -1,12 +1,14 @@
 {
   "name": "api.caamillo.it",
-  "version": "1.0.50",
+  "version": "1.0.0",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts"
+    "dev": "bun run --watch src/index.js"
   },
   "dependencies": {
-    "elysia": "latest"
+    "elysia": "latest",
+    "i": "^0.3.7",
+    "npm": "^10.2.3",
+    "whois-light": "^1.1.7"
   },
   "devDependencies": {
     "bun-types": "latest"
