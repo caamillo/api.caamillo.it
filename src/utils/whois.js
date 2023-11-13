@@ -1,5 +1,5 @@
 const { lookup } = require("whois-light")
-const parser = require('./parser')
+const parser = require('bun-whois-parser')
 
 const whois = async (url, parsed=false) => {
     try {

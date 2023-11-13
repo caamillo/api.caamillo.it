@@ -5,6 +5,7 @@
     "dev": "bun run --watch src/index.js"
   },
   "dependencies": {
+    "bun-whois-parser": "^1.0.0",
     "elysia": "latest",
     "npm": "^10.2.3",
     "whois-light": "^1.1.7"
