@@ -5,11 +5,14 @@ const whois = async (url, parsed=false) => {
     try {
         const res = await lookup(url)
         if (!parsed) return res
-        return parser(res, url)
+        return await parser(res, url)
     } catch(err) {
-        console.log(err)
+        console.error(err) // Debug only
+        return {
+            error: 'TLD not found!',
+            url: url
+        }
     }
-    return undefined
 }
 
 module.exports = {

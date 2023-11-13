@@ -5,7 +5,7 @@ const app = new Elysia()
   .group('/v1', app =>
     app
     .get("/whois/:url", async ({ query: { parsed }, params: { url } }) =>
-      await whois(url, parsed === 'true')
+      await whois(url, parsed === 'true') ?? { error: 'Unexpected Error' }
     )
   )
   .listen(Bun.env['API_PORT']);
