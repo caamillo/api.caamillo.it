@@ -16,10 +16,21 @@ module.exports = [
 		}
 	},
 	{
+		tld: 'au',
+		regex: {
+			domainName: 'Domain Name: *([^\\s]+)',
+			registrar: 'Registrar Name: *(.+)',
+			updatedDate: 'Last Modified: *(.+)',
+			status: 'Status: *(.+)',
+		},
+		etc: {
+			rateLimited: 'WHOIS LIMIT EXCEEDED'
+		}
+	},
+	{
 		tld: 'us',
 		etc: {
-			notFound: '^No Data Found',
-			dateFormat: 'YYYY-MM-DDThh:mm:ssZ'
+			notFound: '^No Data Found'
 		}
 	},
 	{
@@ -31,6 +42,9 @@ module.exports = [
 			creationDate: 'created: *(.+)',
 			expirationDate: 'paid-till: *(.+)',
 			status: 'state: *(.+)'
+		},
+		etc: {
+			notFound: 'No entries found'
 		}
 	},
 	{
@@ -61,6 +75,9 @@ module.exports = [
 			domainName: 'Domain name: *([^\\s]+)',
 			registrar: 'Registrar: *\\s*(.+)',
 			status: 'Status: *(.+)'
+		},
+		etc: {
+			notFound: ' is free'
 		}
 	},
 	{
@@ -83,6 +100,9 @@ module.exports = [
 			creationDate: '\\[(登録年月日|Created on)\\]\\s?(.+)',
 			expirationDate: '\\[(有効期限|Expires on)\\]\\s?(.+)',
 			status: '\\[(状態|Status)\\]\\s*(.+)'
+		},
+		etc: {
+			notFound: 'No match!!'
 		}
 	},
 	{
@@ -94,6 +114,9 @@ module.exports = [
 			creationDate: 'created: *(.+)',
 			expirationDate: 'renewal date: *(.+)',
 			status: 'Registration status:\\n\\s*(.+)'
+		},
+		etc: {
+			notFound: 'No information available about domain name'
 		}
 	},
 	{
@@ -111,6 +134,9 @@ module.exports = [
 		regex: {
 			domainName: 'Domain: *([^\\n\\r]+)',
 			registrar: 'Registrar: *\\n *Name: *([^\\n\\r]+)'
+		},
+		etc: {
+			notFound: 'Status:\\s+AVAILABLE'
 		}
 	},
 	{
@@ -301,6 +327,7 @@ module.exports = [
 			expirationDate: 'Expire Date: *(.+)'
 		},
 		etc: {
+			notFound: 'Status:\\s+AVAILABLE',
 			dateFormat: 'YYYY-MM-DD HH:mm:ss'
 		}
 	}

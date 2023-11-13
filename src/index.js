@@ -10,4 +10,4 @@ const app = new Elysia()
   )
   .listen(Bun.env['API_PORT']);
 
-console.log(`api.caamillo.it is running at ${app.server?.hostname}:${app.server?.port}`)
+console.log(`api.caamillo.it is running at ${ app.server?.hostname }:${ app.server?.port }`)

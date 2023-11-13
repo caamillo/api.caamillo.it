@@ -3,8 +3,10 @@ const patterns = require('./patterns')
 const sanify = (parsed, etc) => {
 	Object.keys(parsed).map(key => {
 		let value = parsed[key]
-		value = value?.trim()
-		value = value?.length ? value : undefined
+		if (typeof value === 'string') {
+			value = value.trim()
+			value = value.length ? value : undefined
+		}
 		parsed[key] = value
 	})
 	return parsed
@@ -12,6 +14,8 @@ const sanify = (parsed, etc) => {
 
 const parse = (data, { regex, etc }) => {
 	const parsed = {}
+	if (data.match(etc.notFound)) parsed.available = true
+	else parsed.available = false
 	Object.keys(regex).map(key => {
 		const match = data.match(regex[key])?.slice(-1)?.join()
 		parsed[key] = match
