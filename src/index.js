@@ -2,8 +2,11 @@ import { Elysia } from "elysia"
 import { whois } from "./utils/whois";
 
 const app = new Elysia()
-  .get("/whois/:url", async ({ query: { parsed }, params: { url } }) =>
-    await whois(url, parsed === 'true')
+  .group('/v1', app =>
+    app
+    .get("/whois/:url", async ({ query: { parsed }, params: { url } }) =>
+      await whois(url, parsed === 'true')
+    )
   )
   .listen(Bun.env['API_PORT']);
 
