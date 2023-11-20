@@ -1,0 +1,13 @@
+[
+    {
+        "id": "whois-0",
+        "name": "whois",
+        "grant": [
+            {
+                "name": "guest",
+                "limit": 5,
+                "per": [ 1, "m" ]
+            }
+        ]
+    }
+]

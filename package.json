@@ -2,7 +2,8 @@
   "name": "api.caamillo.it",
   "version": "1.0.0",
   "scripts": {
-    "dev": "bun run --watch src/index.js"
+    "dev": "bun run --watch src/index.js",
+    "start": "bun src/index.js"
   },
   "dependencies": {
     "@elysiajs/bearer": "^0.7.0",
@@ -10,7 +11,9 @@
     "elysia": "latest",
     "jsonwebtoken": "^9.0.2",
     "npm": "^10.2.3",
-    "whois-light": "^1.1.7"
+    "redis": "^4.6.10",
+    "whois-light": "^1.1.7",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "bun-types": "latest"
