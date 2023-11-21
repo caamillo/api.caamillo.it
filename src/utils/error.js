@@ -1,5 +1,5 @@
 const DefaultError = (title="Error", message="Uff.. something went wrong", set, status=400) => {
-    set?.status = status
+    if (set && status) set.status = status
     return {
         error: title,
         message: message
