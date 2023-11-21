@@ -46,10 +46,7 @@ const JWT_EXPIRE_IN = '1d'
         name: name
       }
 
-      if (!identity.rcon && !identity.guest) {
-        set.status = 401
-        return 'Unauthorized'
-      }
+      if (!identity.rcon && !identity.guest) return NotAuthorized(set)
 
       const accessToken = await jwt.sign(identity, Bun.env['SECRET_KEY'], { expiresIn: JWT_EXPIRE_IN }) // 1 day
       
