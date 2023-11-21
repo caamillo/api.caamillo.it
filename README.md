@@ -14,7 +14,7 @@ for [caamillo.it](https://caamillo.it) services.
 
 ## Services
 
-- Whois API (raw or [parsed]()) `/v1/whois/{ URL }?parsed={ true || false }`
+- Whois API (raw or [parsed](https://github.com/caamillo/bun-whois-parser)) `/v1/whois/{ URL }?parsed={ true || false }`
   
 ## How it works
 if you see `.env.example` there is `SECRET_KEY` that needs JWT for authentication. But wait, since I don't really need a db, you can login with two pws: one for guest and rcon only for administration/debugging purpose. So when you make POST req in `/token` with `name` and `pw` in a JSON body you'll gave the access-token that you need for your reqs. However, you can limit guest access by service (check `services.json`). The anti-flood system is written using Redis cache-storage and prevent it using your IP address (I know that this may be not the best practice but fuck it I only need this for a stupid showcase).
