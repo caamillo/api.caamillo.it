@@ -47,7 +47,7 @@ const JWT_EXPIRE_IN = '1d'
         return 'Unauthorized'
       }
 
-      const accessToken = await jwt.sign(identity, Bun.env['SECRET_KEY'].toString('utf-8'), { expiresIn: JWT_EXPIRE_IN, algorithm: 'HS256', allowInsecureKeySizes: true, allowInvalidAsymmetricKeyTypes: true }) // 1 day
+      const accessToken = await jwt.sign(identity, Bun.env['SECRET_KEY'], { expiresIn: JWT_EXPIRE_IN }) // 1 day
       
       return accessToken
     })
