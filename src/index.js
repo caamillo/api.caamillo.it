@@ -41,14 +41,13 @@ const JWT_EXPIRE_IN = '1d'
         guest: pw === Bun.env['SECRET_GUEST_PW'],
         name: name
       }
-      console.log(identity)
 
       if (!identity.rcon && !identity.guest) {
         set.status = 401
         return 'Unauthorized'
       }
 
-      const accessToken = await jwt.sign(identity, Bun.env['SECRET_KEY'], { expiresIn: JWT_EXPIRE_IN }) // 1 day
+      const accessToken = await jwt.sign(identity, Bun.env['SECRET_KEY'].toString('utf-8'), { expiresIn: JWT_EXPIRE_IN, algorithm: 'HS256', allowInsecureKeySizes: true, allowInvalidAsymmetricKeyTypes: true }) // 1 day
       
       return accessToken
     })
