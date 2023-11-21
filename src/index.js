@@ -52,13 +52,15 @@ const JWT_EXPIRE_IN = '1d'
       return accessToken
     })
     .group('/v1', app => {
-      app.onBeforeHandle(async ({ bearer, set }) => {
+      app.onBeforeHandle(async ({ bearer, set, request, ip }) => {
+        console.log('ip2', ip)
         if (!await auth(bearer, Bun.env['SECRET_KEY'], UserSchema, set)) return Bun.file(path.join(import.meta.path, '../views/401.html'))
       })
       
       for (let service of services) {
         app.group(`/${ service.name }`, app => {
           app.onBeforeHandle(async ({ bearer, ip }) => {
+            console.log('ip1', ip)
             const result = await canAction(bearer, service, client, ip)
             switch (result) {
               case 0:
