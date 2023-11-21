@@ -31,6 +31,7 @@ const JWT_EXPIRE_IN = '1d'
     .use(ip())
     .get('/', () => Bun.file(path.join(import.meta.path, '../views/index.html')))
     .post('/token', async ({ body: { name, pw }, set }) => {
+      console.log('name', name, 'pw', pw)
       if (!name || typeof name !== 'string' || !pw || typeof pw !== 'string') {
         set.status = 400
         return 'Bad request'
@@ -59,7 +60,6 @@ const JWT_EXPIRE_IN = '1d'
       for (let service of services) {
         app.group(`/${ service.name }`, app => {
           app.onBeforeHandle(async ({ bearer, ip }) => {
-            console.log('here')
             const result = await canAction(bearer, service, client, ip)
             switch (result) {
               case 0:
