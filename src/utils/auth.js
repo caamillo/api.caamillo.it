@@ -1,10 +1,10 @@
 const parseJwt = (token) =>
     JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString())
   
-const canAction = async (token, service, client, ip) => {
+const canAction = async (token, service, client, ip, DEBUG_INFO) => {
   const user = parseJwt(token)
   ip = typeof ip === 'string' ? ip : '127.0.0.1'
-  console.log('[ DEBUG ] ip address:', ip)
+  if (DEBUG_INFO) console.log('[ DEBUG ] ip address:', ip)
   if (user.guest) {
     const grant = service.grant.find(grant => grant.name === 'guest')
     if (!grant) return false
@@ -33,7 +33,7 @@ const canAction = async (token, service, client, ip) => {
       await client.lRem(`actions:${ ip }`, 0, JSON.stringify(action))
     })
 
-    console.log('[ DEBUG ] actions by ip:', recentActions.length + 1)
+    if (DEBUG_INFO) console.log('[ DEBUG ] actions by ip:', recentActions.length + 1)
 
     if (recentActions.length >= grant.limit) return 2
 

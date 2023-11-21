@@ -21,6 +21,8 @@ const JWT_EXPIRE_IN = '1d'
   // Utils
   const { auth, parseJwt, canAction } = await require('./utils/auth')(jwt)
 
+  const DEBUG_INFO = Bun.env['DEBUG_INFO'] ? Bun.env['DEBUG_INFO'] === 'TRUE' : false
+
   // Redis client
   const client = createClient()
   client.on('error', err => console.error('Redis Client Error', err))
@@ -61,7 +63,7 @@ const JWT_EXPIRE_IN = '1d'
       for (let service of services) {
         app.group(`/${ service.name }`, app => {
           app.onBeforeHandle(async ({ bearer, ip, set }) => {
-            switch (await canAction(bearer, service, client, ip)) {
+            switch (await canAction(bearer, service, client, ip, DEBUG_INFO)) {
               case 0:
                 return NotAuthorized(set)
               case 1:
