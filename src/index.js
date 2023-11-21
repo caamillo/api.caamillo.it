@@ -7,6 +7,8 @@ const path = require('path')
 
 import whois from "./utils/whois"
 
+const { UnexpectedError, TooManyReqs, NotAuthorized } = require('./utils/error')
+
 const JWT_EXPIRE_IN = '1d'
 
 ;(async () => {
@@ -53,25 +55,26 @@ const JWT_EXPIRE_IN = '1d'
     })
     .group('/v1', app => {
       app.onBeforeHandle(async ({ bearer, set, request }) => {
-        if (!await auth(bearer, Bun.env['SECRET_KEY'], UserSchema, set)) return Bun.file(path.join(import.meta.path, '../views/401.html'))
+        if (!await auth(bearer, Bun.env['SECRET_KEY'], UserSchema, set)) return NotAuthorized(set)
       })
       
       for (let service of services) {
         app.group(`/${ service.name }`, app => {
-          app.onBeforeHandle(async ({ bearer, ip }) => {
-            const result = await canAction(bearer, service, client, ip)
-            switch (result) {
+          app.onBeforeHandle(async ({ bearer, ip, set }) => {
+            switch (await canAction(bearer, service, client, ip)) {
               case 0:
-                return Bun.file(path.join(import.meta.path, '../views/401.html'))
+                return NotAuthorized(set)
               case 1:
                 return undefined
               case 2:
-                return { error: 'Too many requests!', message: 'Please wait to regain access to this route' }
+                return TooManyReqs(set)
+              default:
+                return UnexpectedError(set)
             }
           })
           
-          return app.get("/:url", async ({ query: { parsed }, params: { url } }) =>
-            await whois(url, parsed === 'true') ?? { error: 'Unexpected Error' }
+          return app.get("/:url", async ({ query: { parsed }, params: { url }, set }) =>
+            await whois(url, parsed === 'true') ?? UnexpectedError(set)
           )
         })
       }
