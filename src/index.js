@@ -1,6 +1,7 @@
 import { Elysia } from "elysia"
 import jwt from 'jsonwebtoken'
 import { bearer } from '@elysiajs/bearer'
+import { ip } from "elysia-ip"
 import { createClient } from 'redis'
 const path = require('path')
 
@@ -27,6 +28,7 @@ const JWT_EXPIRE_IN = '1d'
   // App Router
   const app = new Elysia()
     .use(bearer())
+    .use(ip())
     .get('/', () => Bun.file(path.join(import.meta.path, '../views/index.html')))
     .post('/token', async ({ body: { name, pw }, set }) => {
       if (!name || typeof name !== 'string' || !pw || typeof pw !== 'string') {
@@ -50,7 +52,8 @@ const JWT_EXPIRE_IN = '1d'
       return accessToken
     })
     .group('/v1', app => {
-      app.onBeforeHandle(async ({ bearer, set }) => {
+      app.onBeforeHandle(async ({ bearer, set, ip }) => {
+        console.log(ip)
         if (!await auth(bearer, Bun.env['SECRET_KEY'], UserSchema, set)) return Bun.file(path.join(import.meta.path, '../views/401.html'))
       })
       

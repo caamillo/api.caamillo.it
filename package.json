@@ -9,6 +9,7 @@
     "@elysiajs/bearer": "^0.7.0",
     "bun-whois-parser": "^1.0.3",
     "elysia": "latest",
+    "elysia-ip": "^0.0.4",
     "jsonwebtoken": "^9.0.2",
     "npm": "^10.2.3",
     "redis": "^4.6.10",

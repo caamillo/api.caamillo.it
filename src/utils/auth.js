@@ -12,7 +12,7 @@ const canAction = async (token, service, client) => {
 
     const now = new Date()
 
-    const [ how, mesure ] = grant.per
+    const [ unit, mesure ] = grant.per
 
     const recentActions = actions.filter(action => {
       const diffDates = Math.abs(now - new Date(action.pushed_on))
@@ -22,11 +22,11 @@ const canAction = async (token, service, client) => {
             diff = diffDates / (1e3 * 60)
           break
       }
-      return diff <= how
+      return diff <= unit
     })
-    console.log(recentActions.length)
+    // console.log(recentActions.length)
 
-    if (recentActions.length >= grant.limit) return 2
+    if (recentActions.length >= grant.limit - 1) return 2
 
     // Add Action
     await client.rPush(`actions:${ token }`, JSON.stringify({
