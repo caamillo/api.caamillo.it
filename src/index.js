@@ -59,6 +59,7 @@ const JWT_EXPIRE_IN = '1d'
       for (let service of services) {
         app.group(`/${ service.name }`, app => {
           app.onBeforeHandle(async ({ bearer, ip }) => {
+            console.log('here')
             const result = await canAction(bearer, service, client, ip)
             switch (result) {
               case 0:
