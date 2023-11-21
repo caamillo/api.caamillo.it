@@ -12,7 +12,7 @@ Basically an api handler using:
 
 for [caamillo.it](https://caamillo.it) services.
 
-## Current Services
+## Services
 
 - Whois API (raw or [parsed]()) `/v1/whois/{ URL }?parsed={ true || false }`
   
