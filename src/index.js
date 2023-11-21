@@ -31,7 +31,6 @@ const JWT_EXPIRE_IN = '1d'
     .use(ip())
     .get('/', () => Bun.file(path.join(import.meta.path, '../views/index.html')))
     .post('/token', async ({ body: { name, pw }, set }) => {
-      console.log('name', name, 'pw', pw)
       if (!name || typeof name !== 'string' || !pw || typeof pw !== 'string') {
         set.status = 400
         return 'Bad request'
@@ -42,6 +41,7 @@ const JWT_EXPIRE_IN = '1d'
         guest: pw === Bun.env['SECRET_GUEST_PW'],
         name: name
       }
+      console.log(identity)
 
       if (!identity.rcon && !identity.guest) {
         set.status = 401
