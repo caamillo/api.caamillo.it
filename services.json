@@ -6,7 +6,7 @@
             {
                 "name": "guest",
                 "limit": 5,
-                "per": [ 1, "m" ]
+                "per": "1m"
             }
         ]
     }

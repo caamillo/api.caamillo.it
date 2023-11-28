@@ -59,8 +59,11 @@ const JWT_EXPIRE_IN = '1d'
       
       for (let service of services) {
         app.group(`/${ service.name }`, app => {
+          let canActionRes
           app.onBeforeHandle(async ({ bearer, ip, set }) => {
-            switch (await canAction(bearer, service, client, ip, DEBUG_INFO)) {
+            canActionRes = await canAction(bearer, service, client, ip, DEBUG_INFO)
+            if (DEBUG_INFO) console.log('[ DEBUG ] canActionRes:', canActionRes)
+            switch (canActionRes.code) {
               case 0:
                 return NotAuthorized(set)
               case 1:

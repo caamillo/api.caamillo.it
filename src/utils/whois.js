@@ -5,7 +5,7 @@ module.exports = async (url, parsed=false) => {
     try {
         const res = await lookup(url)
         if (!parsed) return res
-        return await parser(res, url)
+        return parser(res, url)
     } catch(err) {
         console.error(err) // Debug only
         return {
