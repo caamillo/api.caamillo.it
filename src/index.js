@@ -52,7 +52,10 @@ const JWT_EXPIRE_IN = '1d'
 
       const accessToken = await jwt.sign(identity, Bun.env['SECRET_KEY'], { expiresIn: JWT_EXPIRE_IN }) // 1 day
       
-      return accessToken
+      return {
+        title: 'success',
+        data: accessToken
+      }
     })
     .group('/v1', app => {
       app.onBeforeHandle(async ({ bearer, set, request }) => {
