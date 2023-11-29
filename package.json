@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "@elysiajs/bearer": "^0.7.0",
+    "@elysiajs/cors": "^0.7.2",
     "bun-whois-parser": "^1.1.6",
     "elysia": "latest",
     "elysia-ip": "^0.0.4",

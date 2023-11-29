@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken'
 import { bearer } from '@elysiajs/bearer'
 import { ip } from "elysia-ip"
 import { createClient } from 'redis'
+import { cors } from '@elysiajs/cors'
 const path = require('path')
 
 import whois from "./utils/whois"
@@ -33,6 +34,7 @@ const JWT_EXPIRE_IN = '1d'
   const app = new Elysia()
     .use(bearer())
     .use(ip())
+    .use(cors())
     .get('/', () => Bun.file(path.join(import.meta.path, '../views/index.html')))
     .post('/token', async ({ body: { name, pw }, set }) => {
       if (!name || typeof name !== 'string' || !pw || typeof pw !== 'string') {
