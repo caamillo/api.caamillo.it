@@ -4,6 +4,7 @@ import { bearer } from '@elysiajs/bearer'
 import { ip } from "elysia-ip"
 import { createClient } from 'redis'
 import { cors } from '@elysiajs/cors'
+import ms from 'ms'
 const path = require('path')
 
 import whois from "./utils/whois"
@@ -45,8 +46,11 @@ const JWT_EXPIRE_IN = '1d'
       const identity = {
         rcon: pw === Bun.env['SECRET_RCON_PW'],
         guest: pw === Bun.env['SECRET_GUEST_PW'],
-        name: name
+        name: name,
+        expires: (new Date() + ms(JWT_EXPIRE_IN)).toISOString()
       }
+
+      if (DEBUG_INFO) console.log(`[ DEBUG ] identity:`, identity)
 
       if (!identity.rcon && !identity.guest) return NotAuthorized(set)
 
