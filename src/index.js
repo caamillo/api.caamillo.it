@@ -63,8 +63,8 @@ const JWT_EXPIRE_IN = '1d'
     })
     .get('/validate-token', ({ bearer, set }) =>
       auth(jwt, bearer, Bun.env['SECRET_KEY'], UserSchema, set) ?
-        { title: 'Valid', message: 'You are authenticated' } :
-        { title: 'Invalid', message: 'You are not authenticated' }
+        { title: 'Valid', message: 'You are authenticated', data: true } :
+        { title: 'Invalid', message: 'You are not authenticated', data: false }
     )
     .group('/v1', app => {
       app.onBeforeHandle(async ({ bearer, set, request }) => {
