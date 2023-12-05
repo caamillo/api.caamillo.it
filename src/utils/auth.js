@@ -49,22 +49,20 @@ const canAction = async (token, service, client, ip, DEBUG_INFO) => {
   return ActionResponse(0, 'Action has been dispatched successfully')
 }
 
-module.exports = async (jwt) => {
-    const auth = async (token, secret, UserSchema, set) => {
-        try {
-          if(!jwt.verify(token, secret)) {
-            set.status = 401
-            return false
-          }
-          UserSchema.parse(parseJwt(token))
-          return true
-        } catch (err) {
-          return false
-        }
+const auth = (jwt, token, secret, UserSchema, set) => {
+  try {
+    if(!jwt.verify(token, secret)) {
+      set.status = 401
+      return false
     }
+    UserSchema.parse(parseJwt(token))
+    return true
+  } catch (err) {
+    return false
+  }
+}
 
-    return {
-        auth, parseJwt, canAction
-    }
+module.exports = {
+  auth, parseJwt, canAction
 }
 

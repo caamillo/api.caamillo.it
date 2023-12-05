@@ -21,7 +21,7 @@ const JWT_EXPIRE_IN = '1d'
   const UserSchema = require('./schemas/User')
 
   // Utils
-  const { auth, parseJwt, canAction } = await require('./utils/auth')(jwt)
+  const { auth, parseJwt, canAction } = require('./utils/auth')
 
   const DEBUG_INFO = Bun.env['DEBUG_INFO'] ? Bun.env['DEBUG_INFO'] === 'TRUE' : false
 
@@ -61,9 +61,14 @@ const JWT_EXPIRE_IN = '1d'
         data: accessToken
       }
     })
+    .get('/validate-token', ({ bearer, set }) =>
+      auth(jwt, bearer, Bun.env['SECRET_KEY'], UserSchema, set) ?
+        { title: 'Valid', message: 'You are authenticated' } :
+        { title: 'Invalid', message: 'You are not authenticated' }
+    )
     .group('/v1', app => {
       app.onBeforeHandle(async ({ bearer, set, request }) => {
-        if (!await auth(bearer, Bun.env['SECRET_KEY'], UserSchema, set)) return NotAuthorized(set)
+        if (!auth(bearer, Bun.env['SECRET_KEY'], UserSchema, set)) return NotAuthorized(set)
       })
       
       for (let service of services) {
