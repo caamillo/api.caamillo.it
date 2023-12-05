@@ -47,7 +47,7 @@ const JWT_EXPIRE_IN = '1d'
         rcon: pw === Bun.env['SECRET_RCON_PW'],
         guest: pw === Bun.env['SECRET_GUEST_PW'],
         name: name,
-        expires: (new Date() + ms(JWT_EXPIRE_IN)).toISOString()
+        expires: new Date(Date.now() + ms(JWT_EXPIRE_IN)).toISOString()
       }
 
       if (DEBUG_INFO) console.log(`[ DEBUG ] identity:`, identity)
