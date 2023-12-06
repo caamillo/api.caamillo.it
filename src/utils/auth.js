@@ -10,6 +10,15 @@ const ActionResponse = (code=0, data='', remaining=-1) => {
     remaining: remaining
   }
 }
+
+const safeJSONparse = (thing) => {
+  try {
+    return JSON.parse(thing)
+  } catch (err) {
+    
+  }
+  return
+}
   
 const canAction = async (token, service, client, ip, DEBUG_INFO) => {
   const user = parseJwt(token)
@@ -20,7 +29,7 @@ const canAction = async (token, service, client, ip, DEBUG_INFO) => {
     if (!grant) return ActionResponse(0, 'Not Authorized')
 
     const results = await client.lRange(`actions:${ ip }`, 0, -1)
-    const actions = results.map(res => JSON.parse(res)).filter(action => action.service_id === service.id)
+    const actions = results.map(res => safeJSONparse(res)).filter(action => action?.service_id === service.id)
 
     const now = new Date()
 

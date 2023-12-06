@@ -37,10 +37,22 @@ const JWT_EXPIRE_IN = '1d'
     .use(ip())
     .use(cors())
     .get('/', () => Bun.file(path.join(import.meta.path, '../views/index.html')))
-    .post('/token', async ({ body: { name, pw }, set }) => {
+    .post('/token', async ({ body: { name, pw }, set, ip }) => {
       if (!name || typeof name !== 'string' || !pw || typeof pw !== 'string') {
         set.status = 400
         return 'Bad request'
+      }
+
+      ip = typeof ip === 'string' ? ip : '127.0.0.1'
+
+      // Check if user is already logged
+      const usr = await client.get(`login:${ ip }`)
+      if (usr) {
+        if (DEBUG_INFO) console.log(`[ DEBUG ] user ${ ip } was already logged:`, usr)
+        return {
+          title: 'forward',
+          data: usr
+        }
       }
 
       const identity = {
@@ -50,11 +62,16 @@ const JWT_EXPIRE_IN = '1d'
         expires: new Date(Date.now() + ms(JWT_EXPIRE_IN)).toISOString()
       }
 
-      if (DEBUG_INFO) console.log(`[ DEBUG ] identity:`, identity)
+      if (DEBUG_INFO) console.log(`[ DEBUG ] user ${ ip } identity:`, identity)
 
       if (!identity.rcon && !identity.guest) return NotAuthorized(set)
 
       const accessToken = await jwt.sign(identity, Bun.env['SECRET_KEY'], { expiresIn: JWT_EXPIRE_IN }) // 1 day
+
+      // Creating expire
+      await client.set(`login:${ ip }`, accessToken, `PX ${ ms(JWT_EXPIRE_IN) }`) // Expiring Login Info
+      await client.rPush(`actions:${ ip }`, '')
+      await client.expire(`actions:${ ip }`, ms(JWT_EXPIRE_IN) * 1e3) // Expiring Actions
       
       return {
         title: 'success',
