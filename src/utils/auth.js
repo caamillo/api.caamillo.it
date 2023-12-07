@@ -58,13 +58,18 @@ const canAction = async (token, service, client, ip, DEBUG_INFO) => {
   return ActionResponse(0, 'Action has been dispatched successfully')
 }
 
-const auth = (jwt, token, secret, UserSchema, set) => {
+const auth = async (jwt, token, secret, UserSchema, set) => {
   try {
     if(!jwt.verify(token, secret)) {
       set.status = 401
       return false
     }
     UserSchema.parse(parseJwt(token))
+    const tokenByIp = await client.get(`login:${ ip }`)
+    if (tokenByIp !== token) {
+      set.status = 401
+      return false
+    }
     return true
   } catch (err) {
     return false
@@ -72,14 +77,8 @@ const auth = (jwt, token, secret, UserSchema, set) => {
 }
 
 const logout = async (jwt, token, secret, UserSchema, set, client, ip) => {
-  if (!auth(jwt, token, secret, UserSchema, set)) {
+  if (!await auth(jwt, token, secret, UserSchema, set)) {
     set.status = 400
-    return false
-  }
-
-  const tokenByIp = await client.get(`login:${ ip }`)
-  if (tokenByIp !== token) {
-    set.status = 401
     return false
   }
 
