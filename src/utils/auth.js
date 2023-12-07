@@ -68,6 +68,7 @@ const auth = async (jwt, token, secret, UserSchema, set, client) => {
     console.log('qui ci arrivo')
     UserSchema.parse(parseJwt(token))
     console.log('schema valido')
+    console.log('client', client)
     const tokenByIp = await client.get(`login:${ ip }`)
     console.log('Your token:', token, 'ip token:', tokenByIp)
     if (tokenByIp !== token) {
@@ -77,6 +78,8 @@ const auth = async (jwt, token, secret, UserSchema, set, client) => {
     console.log('so verissimi')
     return true
   } catch (err) {
+    console.log("ERRORE!")
+    console.error(err)
     return false
   }
 }
