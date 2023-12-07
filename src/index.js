@@ -84,9 +84,15 @@ const JWT_EXPIRE_IN = '1d'
         { title: 'Invalid', message: 'You are not authenticated', data: false }
     )
     .get('/logout', async ({ query: { t }, ip, set }) => {
-        return {
-          success: await logout(jwt, t, Bun.env['SECRET_KEY'], UserSchema, set, client, ip)
-        }
+      if (await logout(jwt, t, Bun.env['SECRET_KEY'], UserSchema, set, client, ip)) return {
+        title: 'Success',
+        message: 'You successfully logged out'
+      }
+
+      return {
+        error: 'Error',
+        message: 'An error has occurred logging you out'
+      }
     })
     .group('/v1', app => {
       app.onBeforeHandle(async ({ bearer, set, request, ip }) => {
