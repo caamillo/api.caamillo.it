@@ -78,19 +78,19 @@ const JWT_EXPIRE_IN = '1d'
         data: accessToken
       }
     })
-    .get('/validate-token', async ({ bearer, set }) =>
-      await auth(jwt, bearer, Bun.env['SECRET_KEY'], UserSchema, set, client) ?
+    .get('/validate-token', async ({ bearer, set, ip }) =>
+      await auth(jwt, bearer, Bun.env['SECRET_KEY'], UserSchema, set, client, ip) ?
         { title: 'Valid', message: 'You are authenticated', data: true } :
         { title: 'Invalid', message: 'You are not authenticated', data: false }
     )
-    .get('/logout', async ({ query: { t }, ip, set}) => {
+    .get('/logout', async ({ query: { t }, ip, set }) => {
         return {
           success: await logout(jwt, t, Bun.env['SECRET_KEY'], UserSchema, set, client, ip)
         }
     })
     .group('/v1', app => {
-      app.onBeforeHandle(async ({ bearer, set, request }) => {
-        if (!await auth(bearer, Bun.env['SECRET_KEY'], UserSchema, set, client)) return NotAuthorized(set)
+      app.onBeforeHandle(async ({ bearer, set, request, ip }) => {
+        if (!await auth(bearer, Bun.env['SECRET_KEY'], UserSchema, set, client, ip)) return NotAuthorized(set)
       })
       
       for (let service of services) {
