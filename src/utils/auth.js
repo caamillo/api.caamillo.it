@@ -58,7 +58,7 @@ const canAction = async (token, service, client, ip, DEBUG_INFO) => {
   return ActionResponse(0, 'Action has been dispatched successfully')
 }
 
-const auth = async (jwt, token, secret, UserSchema, set) => {
+const auth = async (jwt, token, secret, UserSchema, set, client) => {
   try {
     if(!jwt.verify(token, secret)) {
       set.status = 401
@@ -77,7 +77,7 @@ const auth = async (jwt, token, secret, UserSchema, set) => {
 }
 
 const logout = async (jwt, token, secret, UserSchema, set, client, ip) => {
-  if (!await auth(jwt, token, secret, UserSchema, set)) {
+  if (!await auth(jwt, token, secret, UserSchema, set, client)) {
     set.status = 400
     return false
   }
