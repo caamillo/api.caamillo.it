@@ -71,7 +71,24 @@ const auth = (jwt, token, secret, UserSchema, set) => {
   }
 }
 
+const logout = async (jwt, token, secret, UserSchema, set, client, ip) => {
+  if (!auth(jwt, token, secret, UserSchema, set)) {
+    set.status = 400
+    return false
+  }
+
+  const tokenByIp = await client.get(`login:${ ip }`)
+  if (tokenByIp !== token) {
+    set.status = 401
+    return false
+  }
+
+  await client.del(`login:${ ip }`)
+  return true
+}
+
 module.exports = {
-  auth, parseJwt, canAction
+  auth, parseJwt, canAction,
+  logout
 }
 
