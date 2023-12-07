@@ -60,16 +60,21 @@ const canAction = async (token, service, client, ip, DEBUG_INFO) => {
 
 const auth = async (jwt, token, secret, UserSchema, set, client) => {
   try {
+    console.log('qui inizio')
     if(!jwt.verify(token, secret)) {
       set.status = 401
       return false
     }
+    console.log('qui ci arrivo')
     UserSchema.parse(parseJwt(token))
+    console.log('schema valido')
     const tokenByIp = await client.get(`login:${ ip }`)
+    console.log('Your token:', token, 'ip token:', tokenByIp)
     if (tokenByIp !== token) {
       set.status = 401
       return false
     }
+    console.log('so verissimi')
     return true
   } catch (err) {
     return false
