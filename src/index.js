@@ -45,6 +45,15 @@ const JWT_EXPIRE_IN = '1d'
 
       ip = typeof ip === 'string' ? ip : '127.0.0.1'
 
+      const identity = {
+        rcon: pw === Bun.env['SECRET_RCON_PW'],
+        guest: pw === Bun.env['SECRET_GUEST_PW'],
+        name: name,
+        expires: new Date(Date.now() + ms(JWT_EXPIRE_IN)).toISOString()
+      }
+
+      if (!identity.rcon && !identity.guest) return NotAuthorized(set)
+
       // Check if user is already logged
       const usr = await client.get(`login:${ ip }`)
       if (usr) {
@@ -55,16 +64,7 @@ const JWT_EXPIRE_IN = '1d'
         }
       }
 
-      const identity = {
-        rcon: pw === Bun.env['SECRET_RCON_PW'],
-        guest: pw === Bun.env['SECRET_GUEST_PW'],
-        name: name,
-        expires: new Date(Date.now() + ms(JWT_EXPIRE_IN)).toISOString()
-      }
-
       if (DEBUG_INFO) console.log(`[ DEBUG ] user ${ ip } identity:`, identity)
-
-      if (!identity.rcon && !identity.guest) return NotAuthorized(set)
 
       const accessToken = await jwt.sign(identity, Bun.env['SECRET_KEY'], { expiresIn: JWT_EXPIRE_IN }) // 1 day
 
