@@ -56,7 +56,7 @@ const JWT_EXPIRE_IN = '1d'
 
       // Check if user is already logged
       const usr = await client.get(`login:${ ip }`)
-      if (usr) {
+      if (usr && jwt.verify(usr, Bun.env['SECRET_KEY'])) {
         if (DEBUG_INFO) console.log(`[ DEBUG ] user ${ ip } was already logged:`, usr)
         return {
           title: 'forward',
