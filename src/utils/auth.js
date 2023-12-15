@@ -22,7 +22,6 @@ const safeJSONparse = (thing) => {
   
 const canAction = async (token, service, client, ip, DEBUG_INFO) => {
   const user = parseJwt(token)
-  ip = typeof ip === 'string' ? ip : '127.0.0.1'
   if (DEBUG_INFO) console.log('[ DEBUG ] ip address:', ip)
   if (user.guest) {
     const grant = service.grant.find(grant => grant.name === 'guest')

@@ -1,7 +1,7 @@
 import { Elysia } from "elysia"
 import jwt from 'jsonwebtoken'
 import { bearer } from '@elysiajs/bearer'
-import { ip } from "elysia-ip"
+import { ip } from "elysia-ip-caamillo"
 import { createClient } from 'redis'
 import { cors } from '@elysiajs/cors'
 import ms from 'ms'
@@ -34,7 +34,9 @@ const JWT_EXPIRE_IN = '1d'
   // App Router
   const app = new Elysia()
     .use(bearer())
-    .use(ip())
+    .use(ip({
+      sanitize: (ip) => ip = typeof ip === 'string' ? ip : '127.0.0.1'
+    }))
     .use(cors())
     .get('/', () => Bun.file(path.join(import.meta.path, '../views/index.html')))
     .post('/token', async ({ body: { name, pw }, set, ip }) => {
@@ -42,8 +44,6 @@ const JWT_EXPIRE_IN = '1d'
         set.status = 400
         return 'Bad request'
       }
-
-      ip = typeof ip === 'string' ? ip : '127.0.0.1'
 
       const identity = {
         rcon: pw === Bun.env['SECRET_RCON_PW'],
@@ -56,7 +56,7 @@ const JWT_EXPIRE_IN = '1d'
 
       // Check if user is already logged
       const usr = await client.get(`login:${ ip }`)
-      if (usr && jwt.verify(usr, Bun.env['SECRET_KEY'])) {
+      if (usr && jwt.verify(usr, Bun.env['SECRET_KEY'], (err) => !err)) {
         if (DEBUG_INFO) console.log(`[ DEBUG ] user ${ ip } was already logged:`, usr)
         return {
           title: 'forward',
