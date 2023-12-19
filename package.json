@@ -10,7 +10,7 @@
     "@elysiajs/cors": "^0.7.2",
     "bun-whois-parser": "^1.1.6",
     "elysia": "latest",
-    "elysia-ip-caamillo": "^0.0.5",
+    "elysia-ip-caamillo": "^0.0.6",
     "jsonwebtoken": "8.5.1",
     "ms": "^2.1.3",
     "npm": "^10.2.3",

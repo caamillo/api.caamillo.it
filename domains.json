@@ -1,0 +1,130 @@
+{
+    "ver": "1.0.0",
+    "name": "Domain Finder TLDS",
+    "desc": "TLDS by category",
+    "author": "@caamillo",
+    "data": {
+        "categories": {
+            "popular": {
+                "show": true,
+                "icon": ""
+            }
+        },
+        "tlds": {
+            "com": {
+                "query": "commercial",
+                "categories": [
+                    "popular"
+                ]
+            },
+            "org": {
+                "query": "organization",
+                "categories": [
+                    "popular"
+                ]
+            },
+            "net": {
+                "query": "network",
+                "categories": [
+                    "popular"
+                ]
+            },
+            "bot": {
+                "query": "bot",
+                "categories": [
+                    "popular"
+                ]
+            },
+            "ai": {
+                "query": "ai",
+                "categories": [
+                    "popular"
+                ]
+            },
+            "xyz": {
+                "query": "testing",
+                "categories": [
+                    "popular"
+                ]
+            },
+            "app": {
+                "query": "app",
+                "categories": [
+                    "popular"
+                ]
+            },
+            "game": {
+                "query": "videogame",
+                "categories": [
+                    "popular"
+                ]
+            },
+            "dev": {
+                "query": "development",
+                "categories": [
+                    "popular"
+                ]
+            },
+            "meme": {
+                "query": "funny",
+                "categories": [
+                    "popular"
+                ]
+            },
+            "pro": {
+                "query": "professional",
+                "categories": [
+                    "popular"
+                ]
+            },
+            "online": {
+                "query": "online",
+                "categories": [
+                    "popular"
+                ]
+            },
+            "tech": {
+                "query": "tech",
+                "categories": [
+                    "popular"
+                ]
+            },
+            "art": {
+                "query": "art",
+                "categories": [
+                    "popular"
+                ]
+            },
+            "info": {
+                "query": "info",
+                "categories": [
+                    "popular"
+                ]
+            },
+            "shop": {
+                "query": "shop",
+                "categories": [
+                    "popular"
+                ]
+            },
+            "cloud": {
+                "query": "cloud",
+                "categories": [
+                    "popular"
+                ]
+            },
+            "store": {
+                "query": "store",
+                "categories": [
+                    "popular"
+                ]
+            },
+            "live": {
+                "query": "live",
+                "categories": [
+                    "popular"
+                ]
+            }
+        }
+    }
+}

@@ -1,7 +1,18 @@
 [
     {
-        "id": "whois-0",
+        "id": "whois",
         "name": "whois",
+        "grant": [
+            {
+                "name": "guest",
+                "limit": 5,
+                "per": "1m"
+            }
+        ]
+    },
+    {
+        "id": "bulk-whois",
+        "name": "bulk whois search",
         "grant": [
             {
                 "name": "guest",

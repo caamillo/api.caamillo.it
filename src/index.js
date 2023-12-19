@@ -16,6 +16,7 @@ const JWT_EXPIRE_IN = '1d'
 ;(async () => {
   // Services
   const services = JSON.parse(await (Bun.file(path.join(import.meta.path, '../../services.json'), { type: 'application/json' })).text())
+  const domains = JSON.parse(await (Bun.file(path.join(import.meta.path, '../../domains.json'), { type: 'application/json' })).text())
 
   // Schemas
   const UserSchema = require('./schemas/User')
@@ -96,11 +97,11 @@ const JWT_EXPIRE_IN = '1d'
     })
     .group('/v1', app => {
       app.onBeforeHandle(async ({ bearer, set, request, ip }) => {
-        if (!await auth(bearer, Bun.env['SECRET_KEY'], UserSchema, set, client, ip)) return NotAuthorized(set)
+        if (!await auth(jwt, bearer, Bun.env['SECRET_KEY'], UserSchema, set, client, ip)) return NotAuthorized(set)
       })
       
       for (let service of services) {
-        app.group(`/${ service.name }`, app => {
+        app.group(`/${ service.id }`, app => {
           let canActionRes
           app.onBeforeHandle(async ({ bearer, ip, set }) => {
             canActionRes = await canAction(bearer, service, client, ip, DEBUG_INFO)
@@ -117,9 +118,16 @@ const JWT_EXPIRE_IN = '1d'
             }
           })
           
-          return app.get("/:url", async ({ query: { parsed }, params: { url }, set }) =>
-            await whois(url, parsed === 'true') ?? UnexpectedError(set)
-          )
+          switch (service.id) {
+            case 'whois':
+              return app.get("/:url", async ({ query: { parsed }, params: { url }, set }) =>
+                await whois(url, parsed === 'true') ?? UnexpectedError(set)
+              )
+            case 'bulk-whois':
+              return app.get("/:name", async ({ query: { category="popular" }, params: { name }, set }) => {
+                return category
+              })
+          }
         })
       }
 
