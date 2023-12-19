@@ -59,7 +59,6 @@ const canAction = async (token, service, client, ip, DEBUG_INFO) => {
 
 const auth = async (jwt, token, secret, UserSchema, set, client, ip) => {
   try {
-    console.log(token)
     if(!jwt.verify(token, secret)) {
       set.status = 401
       return false
