@@ -12,5 +12,7 @@ module.exports = {
     TooManyReqs: (set, title="Too many Requests", message="Please wait in order to regain access to this route", status=429) =>
         DefaultError(title, message, set, status),
     NotAuthorized: (set, title="Not Authorized", message="You are not authorized", status=401) =>
-        DefaultError(title, message, set, status)
+        DefaultError(title, message, set, status),
+    BadRequest: (set, title="Bad Request", message, status) =>
+        DefaultError(set, title, message, status)
 }

@@ -13,6 +13,7 @@
     "elysia-ip-caamillo": "^0.0.6",
     "jsonwebtoken": "8.5.1",
     "ms": "^2.1.3",
+    "node-fetch": "^3.3.2",
     "npm": "^10.2.3",
     "redis": "^4.6.10",
     "whois-light": "^1.1.7",

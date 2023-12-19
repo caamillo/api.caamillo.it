@@ -4,12 +4,13 @@ import { bearer } from '@elysiajs/bearer'
 import { ip } from "elysia-ip-caamillo"
 import { createClient } from 'redis'
 import { cors } from '@elysiajs/cors'
+import fetch from 'node-fetch'
 import ms from 'ms'
 const path = require('path')
 
 import whois from "./utils/whois"
 
-const { UnexpectedError, TooManyReqs, NotAuthorized } = require('./utils/error')
+const { UnexpectedError, TooManyReqs, NotAuthorized, BadRequest } = require('./utils/error')
 
 const JWT_EXPIRE_IN = '1d'
 
@@ -124,8 +125,43 @@ const JWT_EXPIRE_IN = '1d'
                 await whois(url, parsed === 'true') ?? UnexpectedError(set)
               )
             case 'bulk-whois':
-              return app.get("/:name", async ({ query: { category="popular" }, params: { name }, set }) => {
-                return category
+              return app.get("/:name", async ({ query: { category="popular", page="0", chunk="3" }, params: { name }, set }) => {
+                const categories = Object.keys(domains.data.categories)
+                if (!categories.includes(category)) return BadRequest(set, `${ category } is not a category`)
+
+                try {
+                  page = parseInt(page)
+                } catch(err) {
+                  return BadRequest(set, `${ page } is not an integer`)
+                }
+                try {
+                  chunk = parseInt(chunk)
+                } catch(err) {
+                  return BadRequest(set, `${ chunk } is not an integer`)
+                }
+
+                const tlds = domains.data.tlds
+                const tldsByCategory = Object.keys(tlds).filter(tld => tlds[tld].categories.includes(category))
+
+                const bulk = []
+                const pageChunk = page * chunk
+                for (let tld of tldsByCategory.slice(pageChunk, chunk + pageChunk)) {
+                  const unsplashRes = await fetch(`https://api.unsplash.com/search/photos/?client_id=${ Bun.env['UNSPLASH_ACCESS_KEY'] }&query=${ tlds[tld].query }&per_page=30`)
+                  const data = await unsplashRes.json()
+
+                  const img = data.results[Math.floor(Math.random() * data.results.length)]
+                  bulk.push({
+                    img: {
+                      small: img.urls.thumb,
+                      regular: img.urls.regular
+                    },
+                    data: {
+                      ...(await whois(`${ name }.${ tld }`, true))
+                    }
+                  })
+                }
+
+                return bulk
               })
           }
         })
